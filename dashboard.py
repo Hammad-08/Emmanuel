@@ -1,3 +1,7 @@
+# ------------------------------
+# Heart Disease Prediction Web App Using Streamlit
+# ------------------------------
+
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -10,8 +14,9 @@ preprocessor = load("preprocessor.pkl")  # Preprocessing pipeline
 feature_names_transformed = np.load("feature_names.npy", allow_pickle=True)  # Feature names
 
 # ------------------------------
-# 📝 User Input Section
+# User Input Section
 # ------------------------------
+
 st.subheader("📝 Enter Patient Data for Prediction")
 
 # Define input fields for user
@@ -30,7 +35,7 @@ num_vessels = st.selectbox("Number of Vessels Colored by Fluoroscopy", ["0", "1"
 thalassemia = st.selectbox("Thalassemia", ["Normal", "Fixed Defect", "Reversible Defect"])
 
 # ------------------------------
-# 🔄 Convert Categorical Inputs
+# Convert Categorical Inputs
 # ------------------------------
 sex = 1 if sex == "Male" else 0
 chest_pain_mapping = {"Typical Angina": 1, "Atypical Angina": 2, "Non-Anginal Pain": 3, "Asymptomatic": 4}
@@ -46,8 +51,9 @@ thalassemia = thal_mapping[thalassemia]
 num_vessels = int(num_vessels)
 
 # ------------------------------
-# 🔹 Convert to DataFrame with Correct Column Names
+# Convert to DataFrame with Correct Column Names
 # ------------------------------
+
 original_features = [
     "age", "sex", "chest_pain_type", "resting_blood_pressure", "cholestoral",
     "fasting_blood_sugar", "rest_ecg", "Max_heart_rate", "exercise_induced_angina",
@@ -60,16 +66,18 @@ user_input = np.array([[age, sex, chest_pain, rest_bp, cholestoral, fasting_bs, 
 user_input_df = pd.DataFrame(user_input, columns=original_features)
 
 # ------------------------------
-# ⚙️ Apply Preprocessing
+# Apply Preprocessing
 # ------------------------------
+
 user_input_transformed = preprocessor.transform(user_input_df)
 
 # Convert transformed output back to DataFrame with transformed feature names
 user_input_transformed_df = pd.DataFrame(user_input_transformed, columns=feature_names_transformed)
 
 # ------------------------------
-# 🔮 Prediction Button
+# Prediction Button
 # ------------------------------
+
 if st.button("Predict Heart Disease"):
     # Model Prediction
     prediction = rf_clf.predict(user_input_transformed_df)[0]
@@ -79,5 +87,3 @@ if st.button("Predict Heart Disease"):
         st.error(f"⚠️ High Risk!")
     else:
         st.success(f"✅ Low Risk!")
-
-    
